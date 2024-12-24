@@ -9,7 +9,7 @@ Many, if not most classical Galaksija computers are made without expansion port 
 This repository contains Gerber files for PCB manufacturing for this kind of edge connector. It is designed to be backward compatible with original edge PCB connector but has some additional signal pins as well as a power supply (VCC) pin which were omitted in the original design. These additional signals and VCC must be brought with wires and soldered to the
 expansion connector PCB at marked solder pads (e.g. `READ` CPU signal should be soldered to pad marked as `RD-`). As an addition, in comparison to the original edge PCB connector, this connector has some extra ground (GND) pins provided.
 
-Next image shows top side look of the expansion connector PCB.
+Next image shows top side look of the expansion connector PCB. This is also the top side of the board (visible side) after it is soldered to the motherboard. Although may seem obvious, this is important to note because if soldered in the reverse orientation, both device plugged to the connector and a motherboard may end up damaged!
 
 ![Expansion port PCB.](/images/expansion_port_pcb.png)
 
@@ -24,6 +24,10 @@ ROM binary files at this repository are ROM A and ROM B files for classical Gala
 ## ROM Source Files
 
 ROM A and ROM B source files are ROM assembly source code files for classical Galaksija. ROM A source file has many additional comments and many addresses changed to more readable symbolical form, while ROM B source is equal to official source available as a PDF file and has only original comments in Serbian language.
+
+## Bin2Gtp
+
+Bin2Gtp is a Windows executable program which wraps binary file into the GTP (Galaksija Tape File) file format. Initial version is written by Tomaž Šolc but version published here has additional functionality to support creating a GTP file solely from binary file, without any BASIC code. As a requirement, it needs Microsoft Visual C/C++ 2022 Redistributable package installed. For more information on usage of this command issue `bin2gtp -help` in command prompt window.
 
 ## Machine Code Monitor
 
