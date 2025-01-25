@@ -1,6 +1,6 @@
 # Galaksija Resources
 
-This repository contains various resources for retro computer [Galaksija](https://en.wikipedia.org/wiki/Galaksija_(computer)) (eng. Galaxy). Most of this stuff is not available nowhere else and are created or adapted by me.
+This repository contains various resources for retro computer [Galaksija](https://en.wikipedia.org/wiki/Galaksija_(computer)) (eng. Galaxy). Most of this stuff is not available nowhere else and is created or adapted by me.
 
 ## Expansion Slot PCB
 
@@ -33,7 +33,7 @@ Bin2Gtp is a Windows executable program which wraps binary file into the GTP (Ga
 
 This is assembly source code for the machine code monitor program originally written by Voja Antonić in year 1984 and published in a computer magazine as a hex dump.
 
-This version of that monitor program has rewritten disassembler part of the code. It now uses a bit more memory then before (about 2.5Kbyte vs 2Kbyte) for additional tables for instruction opcodes but actual disassembling code is much smaller then in original program. Of course, disassembler source code is also much more readable now.
+This version of that monitor program has rewritten disassembler part of the code. It now uses a bit more memory then before (about 2.5KByte vs 2KByte) for additional tables for instruction opcodes but actual disassembler code is much smaller then in original program. Of course, disassembler source code is also much more readable now.
 
 The MIT License (MIT)
 

@@ -191,7 +191,7 @@ GetParameter:
 ; -----------------------------------------------------------------------------
 
 RunAsm:
-	jp	(hl)									; Go back (and command *G with 1 to 3 parameters)
+  jp (hl)                   ; Go back (and command *G with 1 to 3 parameters)
 
 TABLE   BYTE "D"            ; Command list
         WORD Disassembler
@@ -228,48 +228,48 @@ TABLE   BYTE "D"            ; Command list
 ; -------------------------------------------------------------------------------------------------
 
 BreakPtr:
-	dec	a											; If not one parameter then WHAT?
-	jp nz, ShowWhatErr
-	ld a, h
-	or l											; Check if parameter value is 0 (or there is no parameter)
-	jr z, RemBrkPtr		  		  ; If yes, remove breakpoint
-	push	hl									; Save breakpoint address on stack
-	ld de, BRKPTR_TEMP
-	call CopyPtrMem  					; Copy 3 bytes from breakpoint address to $2AFF
-	pop	hl										; HL = breakpoint address
-	ld (hl), $C3
-	inc	hl
-	ld (hl), $FC
-	inc	hl
-	ld (hl), $2A							; JP BRKPTR_HANDLER at breakpoint address
-	inc	hl
-	ld ($2B03), hl
-	ld a, $C3
-	ld ($2B02), a						  ; JP breakpoint address + 3 to address $2B02
-	ld a, $CD
-	ld (BRKPTR_HANDLER), a
-	ld hl, ShowRegs
-	ld (BRKPTR_HANDLER + 1), hl ; call ASM_BRK_REG from ROM B (BRKPTR_HANDLER: CD 78 19 (MM) (MM + 1) (MM + 2) C3 MM + 3 MM + 3)
-	ret
+  dec	a                     ; If not one parameter then WHAT?
+  jp nz, ShowWhatErr
+  ld a, h
+  or l                      ; Check if parameter value is 0 (or there is no parameter)
+  jr z, RemBrkPtr           ; If yes, remove breakpoint
+  push	hl                  ; Save breakpoint address on stack
+  ld de, BRKPTR_TEMP
+  call CopyPtrMem           ; Copy 3 bytes from breakpoint address to $2AFF
+  pop	hl                    ; HL = breakpoint address
+  ld (hl), $C3
+  inc	hl
+  ld (hl), $FC
+  inc	hl
+  ld (hl), $2A              ; JP BRKPTR_HANDLER at breakpoint address
+  inc	hl
+  ld ($2B03), hl
+  ld a, $C3
+  ld ($2B02), a             ; JP breakpoint address + 3 to address $2B02
+  ld a, $CD
+  ld (BRKPTR_HANDLER), a
+  ld hl, ShowRegs
+  ld (BRKPTR_HANDLER + 1), hl ; call ASM_BRK_REG from ROM B (BRKPTR_HANDLER: CD 78 19 (MM) (MM + 1) (MM + 2) C3 MM + 3 MM + 3)
+  ret
 
 RemBrkPtr:
-	ld hl, ($2B03)						; HL = breakpoint address + 3
-	dec	hl										; HL = breakpoint address + 2
-	ld a, (hl)
-	cp $2A										; Check if at MM + 2 is higher breakpoint byte?
-	jr nz, NotBrkPtr  				; If not then HOW? (there is no breakpoint here)
-	dec	hl
-	ld a, (hl)
-	dec	hl										; HL = adresa prekidne tačke
-	cp $FC										; Check if at MM + 1 is lower breakpoint byte?
+  ld hl, ($2B03)            ; HL = breakpoint address + 3
+  dec	hl                    ; HL = breakpoint address + 2
+  ld a, (hl)
+  cp $2A                    ; Check if at MM + 2 is higher breakpoint byte?
+  jr nz, NotBrkPtr          ; If not then HOW? (there is no breakpoint here)
+  dec	hl
+  ld a, (hl)
+  dec	hl                    ; HL = adresa prekidne tačke
+  cp $FC                    ; Check if at MM + 1 is lower breakpoint byte?
 NotBrkPtr:
-	jp nz,	ShowHowErr  			; If not then HOW? (there is no breakpoint here)
-	ex de, hl								; DE = breakpoint address
-	ld hl, BRKPTR_TEMP				; HL = address of temorary copied memory contents, this will remove the breakpoint
+  jp nz,	ShowHowErr        ; If not then HOW? (there is no breakpoint here)
+  ex de, hl                 ; DE = breakpoint address
+  ld hl, BRKPTR_TEMP        ; HL = address of temorary copied memory contents, this will remove the breakpoint
 CopyPtrMem:
-	ld bc, $0003
-	ldir											; Copy 3 bytes to or from temporary space
-	ret
+  ld bc, $0003
+  ldir                      ; Copy 3 bytes to or from temporary space
+  ret
 
 ; -------------------------------------------------------------------------------------------------
 
