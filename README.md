@@ -27,13 +27,13 @@ ROM A and ROM B source files are ROM assembly source code files for classical Ga
 
 ## Bin2Gtp
 
-Bin2Gtp is a Windows executable program which wraps binary file into the GTP (Galaksija Tape File) file format. Initial version is written by Tomaž Šolc but version published here has additional functionality to support creating a GTP file solely from binary file, without any BASIC code. As a requirement, it needs Microsoft Visual C/C++ 2022 Redistributable package installed. For more information on usage of this command issue `bin2gtp -help` in command prompt window.
+Bin2Gtp is a Windows executable program which wraps binary file into the GTP (Galaksija Tape Program) file format. Initial version is written by Tomaž Šolc but version published here has additional functionality to support creating a GTP file solely from binary file, without any BASIC code. As a requirement, it needs Microsoft Visual C/C++ 2022 Redistributable package installed. For more information on usage of this command enter `bin2gtp -help` in command prompt window.
 
 ## Machine Code Monitor
 
 This is assembly source code for the machine code monitor program originally written by Voja Antonić in year 1984 and published in a computer magazine as a hex dump.
 
-This version of that monitor program has rewritten disassembler part of the code. It now uses a bit more memory then before (about 2.5KByte vs 2KByte) for additional tables for instruction opcodes but actual disassembler code is much smaller then in original program. Of course, disassembler source code is also much more readable now.
+This version has rewritten disassembler part of the code. It now uses a bit more memory then before (about 2.5KByte vs 2KByte) for additional tables for instruction opcodes but actual disassembler code is much smaller then in original program. Of course, disassembler source code is also much more readable now.
 
 The MIT License (MIT)
 
