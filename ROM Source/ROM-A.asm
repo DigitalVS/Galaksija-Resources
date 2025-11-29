@@ -2597,7 +2597,7 @@ FNDSL:
   ld    a, c
   jr    IZLAZ
 
-TABELA: ; Key codes remaped to match standard keycaps! Old values are commented out on the rigth side.
+TABELA: ; Key codes remapped to match standard keycaps! Old values are commented out on the rigth side.
   dw $2020 ; SPACE   ; dw $2020 ; SPACE
   dw $3029 ; ) 0     ; dw $305F ; Cursor 0
   dw $3121 ; ! 1     ; dw $3121 ; ! 1

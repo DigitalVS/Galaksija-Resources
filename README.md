@@ -40,6 +40,30 @@ This is assembly source code for the machine code monitor program originally wri
 
 This version has rewritten disassembler part of the code. It now uses a bit more memory then before (about 2.5KByte vs 2KByte) for additional tables for instruction opcodes but actual disassembler code is much smaller then in original program. Of course, disassembler source code is also much more readable now.
 
+## G2024 YM2149 Sound Generator
+
+This is the sound generator project for both Galaksija 2024 and original Galaksija from year 1984, made with Yamaha YM2149 sound chip. Schematics is similar to sound expansion schematic for PVV Galaksija Plus. Only one difference is that it additionally uses A6 address line, so that it can work simultaneously with [flash drive expansion](https://github.com/DigitalVS/Galaxy-Flash-Expansion). This change does not break compatibility with all existing programs which are using base I/O address 0 (zero) for the sound chip.
+
+Sound chip externally uses the same clock as the CPU. This frequency is too high for the AY-3-8910 and it cannot be used instead of YM2149 (although many AY-3-8910 available at Aliexpress and eBay are relabeled YM2149 and would work though).
+
+The PCB has additional seventeen solder pads on one of the edges. First pad in the corner of the PCB is a GND pad, and the rest of them are for two 8-bit I/O ports of YM2149 chip.
+
+G2024 YM2149 folder contains Gerber files, schematics and BOM list, needed for making this sound generator.
+
+<div class="grid" markdown>
+
+![G2024 YM2149 3D view](/images/G2024_YM2149_Isometric.png)
+
+![G2024 YM2149 bottom side view](/images/G2024_YM2149_Bottom_Side.png)
+
+</div>
+
+### Old Galaksija with G2024 YM2149 Expansion
+
+As already being said, although primarily intended for Galaksija 2024, this  expansion will work fine with old Galaksija version, too. This is also convenient way to have both sound generator and [Galaxy Space Expansion](https://github.com/DigitalVS/Galaxy-Flash-Expansion) (GSE) connected at the same time, one to the CPU slot and the other to the expansion port on the back side of the motherboard, as it is shown on the next picture.
+
+<img src="./images/YM2149_and_GSE.jpg" width="640" alt="Galaksija with GSE and sound generator connected">
+
 The MIT License (MIT)
 
 Copyright (c) 2025 Vitomir Spasojević (<https://github.com/DigitalVS/Galaxy-Resources>). All rights reserved.
