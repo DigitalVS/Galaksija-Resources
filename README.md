@@ -46,7 +46,7 @@ This is the sound generator project for both Galaksija 2024 and original Galaksi
 
 Sound chip externally uses the same clock as the CPU. This frequency is too high for the AY-3-8910 and it cannot be used instead of YM2149 (although many AY-3-8910 available at Aliexpress and eBay are relabeled YM2149 and would work though).
 
-The PCB has additional seventeen solder pads on one of the edges. First pad in the corner of the PCB is a GND pad, and the rest of them are for two 8-bit I/O ports of YM2149 chip.
+The PCB has additional row of seventeen solder pads on one of the edges. First pad in the corner of the PCB is a GND pad, and the rest of them are for two 8-bit I/O ports of YM2149 chip (see picture bellow).
 
 G2024 YM2149 folder contains Gerber files, schematics and BOM list, needed for making this sound generator.
 
@@ -60,11 +60,9 @@ G2024 YM2149 folder contains Gerber files, schematics and BOM list, needed for m
 
 ### BASIC Support for Sound on Galaksija 2024
 
-BASIC for Galaksija 2024 has no means to send data to the sound chip. Old Galaksija at least could use OUT command for such purposes but that command was thrown out from Galaksija's 2024 BASIC. Galaksija Plus has had a SOUND command and that simple command is recreated here in form of external program which has to be loaded and activated after every computer startup. Then the SOUND BASIC command will be available until computer is turned-off.
+BASIC for Galaksija 2024 has no means to send data to the sound chip. Old Galaksija at least could use OUT command for such purposes but that command was thrown out from Galaksija's 2024 BASIC. Galaksija Plus has had a SOUND command and that simple command is recreated here in form of external program which has to be loaded and activated after every computer startup by issuing `A=USR(&7000)` from the command prompt. Then the SOUND BASIC command will be available until computer is turned-off or reset.
 
-Command syntax is `SOUND <register>,<value>` where \<register\> is YM2149 register number from 0 to 15 and \<value\> is value from 0 to 255 to be written to the chosen register.
-
-After loading program from SOUND.GTP file into the memory, SOUND command is not yet active. It has to be activated before first use by issuing `A=USR(&7000)` from the command prompt.
+Command syntax is `SOUND <register>,<value>` where \<register\> is YM2149 register number from 0 to 15 and \<value\> is value from 0 to 255 to be written to the designated register.
 
 GTP file transferred from PC via USB-serial connection, should be saved to the EEPROM with `SAVE SOUND,&7000,&7047` command.
 
