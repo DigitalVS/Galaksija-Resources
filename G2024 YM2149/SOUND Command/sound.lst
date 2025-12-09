@@ -1,0 +1,57 @@
+# file opened: sound.asm
+ 1    0000
+ 2    0000              ; ROM routines
+ 3    0000              CmdRecognize = $039A
+ 4    0000              CatchAllCmds = $075B
+ 5    0000
+ 6    0000              BASICLINK    = $2BA9
+ 7    0000              BASICSTART   = $2C36
+ 8    0000              BASICEND     = $2C38
+ 9    0000              ; RAM_END       = $9DFE
+10    0000
+11    0000                .org $2C36
+12    2C36
+13    2C36 6E 2C 6E 2C    dw  $2C6E, $2C6E              ; Initialize new BASIC start and end address after the last byte of this program
+14    2C3A
+15    2C3A              Init:
+16    2C3A 3E C3          ld    a, $C3                  ; Unconditional JMP instruction opcode
+17    2C3C 32 A9 2B       ld    (BASICLINK), a
+18    2C3F 21 46 2C       ld    hl, CmdHandler          ; New BASIC command link
+19    2C42 22 AA 2B       ld    (BASICLINK + 1), hl
+20    2C45 C9             ret
+21    2C46
+22    2C46              CmdHandler:
+23    2C46 E3             ex    (sp), hl
+24    2C47 D5             push  de
+25    2C48 11 5B 07       ld    de, CatchAllCmds
+26    2C4B D7             rst   $10                     ; Compare HL and DE
+27    2C4C D1             pop   de
+28    2C4D 28 04          jr    z, .Cmd
+29    2C4F E3             ex    (sp), hl
+30    2C50                ;ret
+31    2C50 C3 0F 10       jp    $100F                   ; Goto ROM B command handler
+32    2C53              .Cmd
+32    2C53                                         ; If CmdHandler is called by CatchAllCmds
+33    2C53                ;ex    (sp), hl
+34    2C53 21 58 2C       ld    hl, CmdTable - 1
+35    2C56 C3 9A 03       jp    CmdRecognize
+36    2C59
+37    2C59              CmdTable:
+38    2C59 53 4F 55 4E    BYTE "SOUND"
+38    2C5D 44
+39    2C5E AC             BYTE (CMD_SOUND>>8 & $FF) + $80 ; Higher byte
+40    2C5F 62             BYTE CMD_SOUND & $FF          ; Lower byte
+41    2C60 90             BYTE $10 + $80                ; 100F (ROM B)
+42    2C61 0F             BYTE $0F
+43    2C62
+44    2C62              CMD_SOUND:
+45    2C62 F1             pop   af                      ; SOUND command code, same as in Galaksija Plus ROM
+46    2C63 CF             rst   $8                      ; Read first parameter
+47    2C64 7D             ld    a, l                    ; A = sound chip register number
+48    2C65 D3 00          out   ($00), a                ; Send to port $00
+49    2C67 CD 05 00       call  $0005                   ; Read second parameter
+50    2C6A 7D             ld    a, l                    ; A = data byte to be written to the register
+51    2C6B D3 01          out   ($01), a                ; Send to port $01
+52    2C6D F7             rst   $30                     ; Return to BASIC
+53    2C6E
+# file closed: sound.asm
