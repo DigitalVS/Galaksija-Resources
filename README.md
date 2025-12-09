@@ -66,7 +66,7 @@ Command syntax is `SOUND <register>,<value>` where \<register\> is YM2149 regist
 
 GTP file transferred from PC via USB-serial connection, should be saved to the EEPROM with `SAVE SOUND,&7000,&7047` command.
 
-> Your may've been noticed that program is loading to unusual memory address &7000 and not as expected to the top of the RAM. This is because saving and/or loading programs from EEPROM to address &8000 and up, is not working properly on Galaksija 2024.
+> You may've been noticed that program is loading to unusual memory address &7000 and not as expected to the top of the RAM. This is because saving and/or loading programs from EEPROM to address &8000 and up, is not working properly on Galaksija 2024.
 
 ### Old Galaksija with G2024 YM2149 Expansion
 
