@@ -30,6 +30,8 @@ ROM binary files at this repository are ROM A and ROM B files for classical Gala
 
 ROM A and ROM B source files are ROM assembly source code files for classical Galaksija. This version of ROM A source file has many additional comments and many addresses changed to more readable symbolical form, while ROM B source is equal to official source available as a PDF file and has only original comments in Serbian language.
 
+ROM C is an assembly source file for Galaksija Plus. It is compatible with project of converting classic Galaksija to Plus version published in "Svet kompjutera" magazine in year 1986.
+
 ## Bin2Gtp
 
 Bin2Gtp is a Windows executable program which wraps binary file into the GTP (Galaksija Tape Program) file format and is initially written by Tomaž Šolc. However, version published here has additional functionality to support creating a GTP file solely from a binary file, without any BASIC code. As a requirement, it needs Microsoft Visual C/C++ 2022 Redistributable package installed. For more information on usage of this command enter `bin2gtp -help` line in command prompt window.
@@ -38,11 +40,11 @@ Bin2Gtp is a Windows executable program which wraps binary file into the GTP (Ga
 
 This is assembly source code for the machine code monitor program originally written by Voja Antonić in year 1984 and published in a computer magazine as a hex dump.
 
-This version has rewritten disassembler part of the code. It now uses a bit more memory then before (about 2.5KByte vs 2KByte) for additional tables for instruction opcodes but actual disassembler code is much smaller then in original program. Of course, disassembler source code is also much more readable now.
+This version has rewritten disassembler part of the code. It now uses a bit more memory then before (about 2.5KByte vs 2KByte) for additional tables for instruction opcodes but actual disassembler code is much smaller and much more readable then in original program.
 
 ## G2024 YM2149 Sound Generator
 
-This is the sound generator project for both Galaksija 2024 and original Galaksija from year 1984, made with Yamaha YM2149 sound chip. Schematics is similar to sound expansion schematic for PVV Galaksija Plus. Only one difference is that it additionally uses A6 address line, so that it can work simultaneously with [flash drive expansion](https://github.com/DigitalVS/Galaxy-Flash-Expansion). This change does not break compatibility with all existing programs which are using base I/O address &00 (sound generator project for old Galaksija) or &BE (for Galaksija Plus) for the sound chip.
+This is the sound generator project for both Galaksija 2024 and original Galaksija from year 1984, made with Yamaha YM2149 sound chip. Schematics is similar to sound expansion schematic for PVV Galaksija Plus. Only one difference is that it additionally uses A6 address line, so that it can work simultaneously with [flash drive expansion](https://github.com/DigitalVS/Galaxy-Flash-Expansion). This change does not break compatibility with all existing programs which are using base I/O address &00 (sound generator project for old Galaksija) or &BE (for Galaksija Plus) for the sound chip, as A6 address bit is zero in both cases.
 
 Sound chip externally uses the same clock as the CPU. This frequency is too high for the AY-3-8910 and it cannot be used instead of YM2149 (although many AY-3-8910 available at Aliexpress and eBay are relabeled YM2149 and would work though).
 
