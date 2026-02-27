@@ -3,7 +3,7 @@
 ; Listing of ROM C for the "Galaxy Plus" computer
 ; Version 36
 ;
-; Authors: Nenad Balint and Milan Tadić
+; Authors: Nenad Dunjić and Milan Tadić
 ; Comments: Hindički Ferenc, translated to english and adapted to sjasmplus by issalig
 ;
 ; Final touch and overall most deserving for this file contents: DigitalVS
@@ -23,7 +23,7 @@
 ; 20 Coordinate X for last drawn point
 ; 21 Coordinate Y for last drawn point
 ; 22 Character definition table start address lower byte
-; 23 Higher byte
+; 23 Character definition table start address higher byte
 ; 24 Used by screen editor (cursor position)
 ; 25 Used by screen editor
 ; 26 Value necessary for the graphics driver to work
@@ -123,7 +123,7 @@ GRAPH_CMD:
         JR   NZ, .E088
         SET  7, E
 .E088:
-        SUB  5
+        SUB  5               ; Offset for R register start value is -5
         LD   L, A
         LD   A, $DB
         LD   B, $0F
@@ -210,9 +210,9 @@ DRAW_CMD:
         EX   DE, HL          ; HL=Y1,X1
         LD   A, B            ; A=Y2
         SUB  H               ; A=difference between Y1 and Y2 points
-        LD   D, $1           ; D=Y step +1
+        LD   D, 1            ; D=Y step +1
         JR   NC, .E0FC       ; if Y2 is greater than Y1, step +1
-        LD   D, $FF          ; else Y step -1
+        LD   D, -1           ; else Y step -1
         LD   A, H            ; A=Y1
         SUB  B               ; A=Y1-Y2
 .E0FC:
@@ -224,9 +224,9 @@ DRAW_CMD:
 .Skip:
         LD   A, C
         SUB  L               ; A=difference between X1 and X2 points
-        LD   E, $1           ; E=X step +1
+        LD   E, 1            ; E=X step +1
         JR   NC, .E10B       ; if X2 is greater than X1, step +1
-        LD   E, $FF          ; otherwise X step -1
+        LD   E, -1           ; otherwise X step -1
         LD   A, L
         SUB  C
 .E10B:
@@ -313,31 +313,31 @@ E148:
         SRL  H
         RR   L
         DJNZ .E166
-        EX   (SP), HL       ; HL=YX, stack=sequence number of the byte for the dot
-        PUSH HL             ; stack=YX
-        LD   H, B           ; H=0
-        LD   L, A           ; HL=Points bit sequence number
+        EX   (SP), HL        ; HL=YX, stack=sequence number of the byte for the dot
+        PUSH HL              ; stack=YX
+        LD   H, B            ; H=0
+        LD   L, A            ; HL=Points bit sequence number
         LD   BC, BitMaskTable ; BC=Points bit mask table start address
         ADD  HL, BC
-        LD   A, (HL)        ; A=mask for a points bit
+        LD   A, (HL)         ; A=mask for a points bit
         LD   HL, (RAMTOP)
         LD   BC, $0014
-        ADD  HL, BC         ; HL = RAMTOP + 20
-        POP  BC             ; BC = YX
-        LD   (HL), C        ; New latest X
+        ADD  HL, BC          ; HL = RAMTOP + 20
+        POP  BC              ; BC = YX
+        LD   (HL), C         ; New latest X
         INC  HL
-        LD   (HL), B        ; New latest Y
-        POP  BC             ; BC=sequence number of the byte in which a dot is
+        LD   (HL), B         ; New latest Y
+        POP  BC              ; BC=sequence number of the byte in which a dot is
         ADD  HL, BC
-        LD   BC, $000B      ; BC=offset from RAMTOP+20 to the beginning of the picture
-        ADD  HL, BC         ; HL=address of the byte where a dot is
-        RET                 ; continue from PLOT/UNPLOT address from stack
+        LD   BC, $000B       ; BC=offset from RAMTOP+20 to the beginning of the picture
+        ADD  HL, BC          ; HL=address of the byte where a dot is
+        RET                  ; continue from PLOT/UNPLOT address from stack
 .E187:
-        CPL                 ; UNPLOT - turn-off a dot
+        CPL                  ; UNPLOT - dot turn-off
         OR   (HL)
-        DB $06              ; dummy LD B, for UNPLOT
+        DB $06               ; dummy LD B, for UNPLOT
 .E18A:
-        AND  (HL)           ; PLOT - turn-on a dot
+        AND  (HL)            ; PLOT - dot turn-on
         LD   (HL), A
         RET
 
@@ -443,10 +443,10 @@ VideoLink:
         LD   DE, $000E
         ADD  HL, DE          ; HL=graphic memory base address
         LD   BC, $1A00       ; Clear graphic screen
-        LD   D,H             ;(BUG - BC=&19FF does not clear a byte outside the screen !!)
+        LD   D,H             ; (BUG - BC=&19FF does not clear a byte outside the screen !!)
         LD   E,L
         INC  DE
-        LD   (HL), $FF       ;(BUG - LD (HL),C is first screen byte, therefore BC is less for 1)
+        LD   (HL), $FF       ; (BUG - LD (HL),C is first screen byte, therefore BC is less for 1)
         LDIR
         JR   .E1F0           ; Continue to ROM-B
 .E22E:
@@ -455,7 +455,7 @@ VideoLink:
         JR   NZ, .E236       ; If not, jump to move cursor
         OR   $C0             ; A=new arrow code (1B...1E -> DB...DE)
         JR   .E1D6           ; Jump to arrow print
-.E236:                       ; (BAG - code 31 is 16 places to right side, because not checking !!!)
+.E236:                       ; (BUG - code 31 is 16 places to right side, because not checking !!!)
         CP   $1B             ; Move - is it code for UP?
         JR   C, .E1F0        ; If less (already done), continue to ROM-B
         JR   NZ, .E23F       ; If more, jump to the next
@@ -463,7 +463,7 @@ VideoLink:
 .E23F:
         CP   $1C             ; If code is for DOWN?
         JR   NZ, .E246       ; If not, jump to next
-        LD   DE, $0020       ; DE=32 if DOWN
+        LD   DE, 32          ; DE=32 if DOWN
 .E246:
         CP   $1D             ; Is it code for LEFT?
         JR   NZ, .E24D       ; If not, jump to next
@@ -812,10 +812,10 @@ VideoDriver:
         INC  HL              ; 6 HL=RAMTOP+31
         LD   C, (HL)         ; 7 C=(RAMTOP+31) higher byte hires image
         LD   L, $BC          ; 7 HL=xxBC
-.Lines:                      ; Line drawing main loop (72T blank interval)
+.Lines:                      ; Line drawing main loop
         LD   A, B            ; 4 A=B
         LD   ($207F), HL     ; 16 $207F=L, $2080=H
-        JP   Z, .End         ; 10 if Zf=0 end (from DEC H, number of lines)
+        JP   Z, .End         ; 10 if Zf=0 end (from DEC H', number of lines)
         LD   R, A            ; 9 R=B
         LD   A, C            ; 4
         LD   I, A            ; 9 I=C
@@ -1010,10 +1010,10 @@ E539:
         JR   E558            ; Jump to draw the character
 E545:
         LD   A, $53          ; A="S"
-        DB   $11               ; Dummy LD DE,
+        DB   $11             ; Dummy LD DE,
 E548:
         LD   A, $43          ; A="C"
-        DB   $11               ; Dummy LD DE,
+        DB   $11             ; Dummy LD DE,
 E54B:
         LD   A, $5A          ; A="Z"
         LD   (HL), $D7       ; Draw 1/11 line for ČŠŽ (")
@@ -1021,12 +1021,12 @@ E54B:
         LD   (HL), $DF       ; If it is Ć, 1/11 line is different (')
 E553:
         ADD  HL, BC
-        LD   (HL), $EF       ; Draw 2/11 line for all serbian letters (')
+        LD   (HL), $EF       ; Draw 2/11 line for all Serbian letters (')
         JR   E55D            ; Jump
 E558:
-        LD   (HL), $FF       ; Draw 1/11 line for all non-serbian letters
+        LD   (HL), $FF       ; Draw 1/11 line for all non-Serbian letters
         ADD  HL,BC
-        LD   (HL), $FF       ; Draw 2/11 line for all non-serbian letters
+        LD   (HL), $FF       ; Draw 2/11 line for all non-Serbian letters
 E55D:
         ADD  HL, BC          ; HL=character line 3/11 address
         SUB  $20             ; Is code 32 (blank - first in font) ? (SUB C - 1 byte/ 3T less)
@@ -1044,7 +1044,6 @@ E56A:
 E56E:
         DEC  A
         JR   NZ, E56A
-
         PUSH HL              ; Save character offset in the font on the stack
         LD   HL, (RAMTOP)
         LD   DE, $0016       ; DE=offset font system variable address
@@ -1081,7 +1080,7 @@ E593:
         ADD  HL, DE         ; (multiply DE by the ordinal number of the text line)
         JR   E593
 
-CharDef: ; Character definition table. Zero bit value corresponds to white color and one translates to black pixels.
+CharDef: ; Character definition table. Zero bit value corresponds to white color and one translates to black pixels. Contains character codes from 32 to 95.
         DB   $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF ; BLANK
         DB   $EF, $EF, $EF, $EF, $EF, $EF, $EF, $FF, $EF ; EXCLAMATION
         DB   $93, $93, $B7, $DB, $FF, $FF, $FF, $FF, $FF ; QUOTE
@@ -1089,10 +1088,10 @@ CharDef: ; Character definition table. Zero bit value corresponds to white color
         DB   $EF, $83, $ED, $ED, $83, $6F, $6F, $83, $EF ; DOLLAR
         DB   $FF, $B3, $B3, $DF, $EF, $F7, $9B, $9B, $FF ; PERCENT
         DB   $E3, $DD, $EB, $F7, $EB, $5D, $BD, $5D, $63 ; AND
-        DB   $FE, $FC, $FA, $F6, $EF, $F6, $FA, $FC, $FE ; MIPRO1
+        DB   $FE, $FC, $FA, $F6, $EF, $F6, $FA, $FC, $FE ; LOGO1
         DB   $DF, $EF, $F7, $F7, $F7, $F7, $F7, $EF, $DF ; OPEN PARENTHESIS
         DB   $F7, $EF, $DF, $DF, $DF, $DF, $DF, $EF, $F7 ; CLOSED PARENTHESIS
-        DB   $FF, $EF, $AB, $C7, $01, $C7, $AB, $EF, $FF ; STAR
+        DB   $FF, $EF, $AB, $C7, $01, $C7, $AB, $EF, $FF ; ASTERISK
         DB   $FF, $EF, $EF, $EF, $01, $EF, $EF, $EF, $FF ; PLUS
         DB   $FF, $FF, $FF, $FF, $FF, $E7, $E7, $EF, $F7 ; COMMA
         DB   $FF, $FF, $FF, $FF, $01, $FF, $FF, $FF, $FF ; MINUS
@@ -1109,12 +1108,12 @@ CharDef: ; Character definition table. Zero bit value corresponds to white color
         DB   $C7, $BB, $BB, $C7, $BB, $7D, $7D, $BB, $C7 ; 8
         DB   $C7, $BB, $7D, $7D, $3B, $47, $7F, $BF, $C3 ; 9
         DB   $FF, $E7, $E7, $FF, $FF, $FF, $E7, $E7, $FF ; DOUBLE
-        DB   $FF, $E7, $E7, $FF, $FF, $E7, $E7, $EF, $F7 ; Semicolon
+        DB   $FF, $E7, $E7, $FF, $FF, $E7, $E7, $EF, $F7 ; SEMICOLON
         DB   $BF, $DF, $EF, $F7, $FB, $F7, $EF, $DF, $BF ; LESS
         DB   $FF, $FF, $FF, $01, $FF, $01, $FF, $FF, $FF ; EQUAL
         DB   $FB, $F7, $EF, $DF, $BF, $DF, $EF, $F7, $FB ; LARGER
         DB   $C7, $BB, $7D, $BF, $DF, $EF, $EF, $FF, $EF ; QUESTION
-        DB   $DF, $EF, $F7, $03, $FF, $03, $F7, $EF, $DF ; MIPRO2
+        DB   $DF, $EF, $F7, $03, $FF, $03, $F7, $EF, $DF ; LOGO2
         DB   $C7, $BB, $7D, $7D, $7D, $01, $7D, $7D, $7D ; A
         DB   $C1, $BD, $7D, $BD, $C1, $BD, $7D, $7D, $81 ; B
         DB   $C7, $BB, $7D, $FD, $FD, $FD, $7D, $BB, $C7 ; C
@@ -1363,14 +1362,14 @@ QSAVE_CMD:
         JR   Z, .E982        ; if ENTER or ., no parameters. jump (it's basic)
         LD   HL, LineMsg     ; HL=text address "LINE"
         PUSH DE              ; save basic pointer (byte address after name)
-        CALL EA6A            ;  is the parameter LINE ?
-        JR   Z, .E99A        ;  if so, read the LINE number (autostart line number)
+        CALL EA6A            ; is the parameter LINE ?
+        JR   Z, .E99A        ; if so, read the LINE number (autostart line number)
         LD   HL, CodeMsg     ; if not, HL=address of text "CODE"
-        POP  DE              ;  return basic pointer (byte address after the name)
+        POP  DE              ; return basic pointer (byte address after the name)
         CALL EA6A            ; is the parameter CODE ?
         JR   NZ, .E940       ; if not, WHAT?
         RST  $28             ; Clear HL
-        LD   ($2B02), HL     ;  if CODE, LINE address is 0
+        LD   ($2B02), HL     ; if CODE, LINE address is 0
 .E963:
         RST  $8              ; get 1st parameter for CODE
         PUSH HL
@@ -1378,8 +1377,8 @@ QSAVE_CMD:
         PUSH HL
         RST  $18             ; any more parameters ?
         DB ','               ; (is the next character a comma?)
-        DB .E96E-$-1         ;  if not, skip taking the 3rd parameter
-        RST  $8              ;  if yes, take the 3rd parameter (relocation)
+        DB .E96E-$-1         ; if not, skip taking the 3rd parameter
+        RST  $8              ; if yes, take the 3rd parameter (relocation)
         DB $3E               ; Dummy LD A, if there is also a 3rd parameter
 .E96E:
         RST  $28             ; HL=0 if there is no 3rd parameter
@@ -1475,9 +1474,9 @@ QSAVE_CMD:
         CPL                  ; complement CRC
         CALL EBE5            ; record TURBO CRC BYTE (not WORD)
         LD   DE, ($2B04)     ; restore basic pointer
-        EI                   ;  enable interrupt
+        EI                   ; enable interrupt
         CALL MuteSound       ; mute AY sound
-        RST  $30             ; continue basic
+        RST  $30             ; continue t0 basic
 EA19:
         DB "SEARCHING", 13
 
@@ -1675,7 +1674,7 @@ EAB3:
         POP  AF              ; A=name indicator from stack
         INC  A               ; if the name is not specified (indicator is $XXFF)...
         JR   Z, .EB62        ; ...jump
-        POP  DE              ;  otherwise, $DE=address of the name of the requested image
+        POP  DE              ; otherwise, $DE=address of the name of the requested image
 .EB49:
         LD   A, (DE)         ; A=letter of the name of the requested image
         CP   '"'             ; is there a quotation mark at the end of the name
@@ -1810,7 +1809,7 @@ EC0A:
         ADD  A, B            ; add byte to CRC - COMMON CRC AND AY SOUND FOR QLOAD AND QSAVE
         LD   B, A            ; B=CRC
         LD   A, $7A          ; A=value for even CRC is 784Hz
-        BIT  $0, B           ; basis for AY sound is CRC parity (bit 0)
+        BIT  0, B            ; basis for AY sound is CRC parity (bit 0)
         JR   Z, .EC14        ; if even, sound is 784Hz
         LD   A, $B7          ; A=value for odd CRC is 523Hz
 .EC14:
@@ -1818,6 +1817,8 @@ EC0A:
         RST  $10
         RET
 
+; Next jump table is intentionally placed in address region of $ECxx,
+; so that these commands can be found with value $A3 as higher command address byte in CmdTable
 QSAVE:  JP   QSAVE_CMD       ; $E930 QSAVE
 QLOAD:  JP   QLOAD_CMD       ; $EA77 QLOAD
 VERIFY: JP   VERIFY_CMD      ; $EBCF VERIFY
@@ -1861,7 +1862,7 @@ EC5A:
 .EC5F:
         CP   L
         JR   NZ, EC64
-        LD   L, $0
+        LD   L, 0
 EC64:
         DEC  E
         JR   NZ, EC72        ; key not pressed, check next
@@ -2007,7 +2008,7 @@ AUTO_CMD:
         JR   .ED31           ; (only control codes are processed)
 .ED36:
         LD   A, D            ; Process arrow left - deleting
-        CP   $2B             ; Is bufffer address &2BB8?
+        CP   $2B             ; Is buffer address &2BB8?
         JR   NZ, .ED40       ; If bigger, delete last character
         LD   A,E
         CP   $B8
@@ -2031,7 +2032,7 @@ AUTO_CMD:
         PUSH BC              ; End address and...
         PUSH DE              ; ...start address onto the stack
         LD   A, C            ; (higher byte???)
-        SUB  E               ;  A=entered line length...
+        SUB  E               ; A=entered line length...
         PUSH AF              ; ... onto the stack
         CALL $07F2           ; find HL program line
         PUSH DE              ; Address of (at the end) found line on the stack (insertion beginning)
@@ -2114,7 +2115,7 @@ AUTO_CMD:
         JP   Z, .ED36        ; ... delete last character
         CP   $20             ; If it is any other control code (??)...
         JR   C, .EDE7        ; ... ignore it
-        JP   (HL)            ; If it is any characte, return
+        JP   (HL)            ; If it is any character, return
 
 FILL_CMD:
         POP  AF              ; (Does not work in TEXT mode, like PLOT and DRAW ???)
@@ -2294,7 +2295,7 @@ HLOAD_CMD:
         RST  $8              ; get parameter (address of input start)
         CALL R2_CMD          ; turn off ROM-C (back to line editor !!!)
 .EEF9:
-        PUSH HL              ; (BAG. in case of gross error ROM-C remains off !!!)
+        PUSH HL              ; (BUG. in case of gross error ROM-C remains off !!!)
         PUSH HL              ; start address on stack 2x
 .EEFB:
         POP  HL              ; HL=address from stack
@@ -2312,7 +2313,7 @@ HLOAD_CMD:
 .EF0C:
         CALL EC69            ; wait for key press (new KEY(0))
         CP   $1              ; is BRK pressed?
-        JR   Z, EF7F         ; end of entry, jump to power on ROM-C
+        JR   Z, EF7F         ; end of entry, jump to turn-on ROM-C
         CP   $2              ; is STOP/LIST pressed?\
         JR   Z, .EF0C        ; wait for next key /(unnecessary)
         CP   $1D             ; is the left arrow pressed (delete)?
@@ -2355,14 +2356,14 @@ HLOAD_CMD:
         POP  HL              ; Remove the last entry address - end of line processing
         POP  HL
         PUSH HL              ; HL=address of the first entry in the line
-        LD   B, $8           ; B=number of entered HEX digits in the line (if there are less, BAG?)
+        LD   B, $8           ; B=number of entered HEX digits in the line (if there are less, BUG?)
         LD   A, H            ; A=CRC basis (higher byte of starting address)
         ADD  A, L            ; CRC+lower byte of address
 .EF55:
         ADD  A, (HL)         ; CRC+written byte
         INC  HL              ; address of next byte
         DJNZ .EF55           ; add all eight bytes
-        CP   (HL)            ; is the CRC equal to the ninth written byte (again BAG !!!)
+        CP   (HL)            ; is the CRC equal to the ninth written byte (BUG again !!!)
         JR   Z, .EF7B        ; if equal, jump to next line entry
         POP  HL              ; set stack as...
         PUSH HL              ; ...as at the beginning of the line
@@ -2382,9 +2383,10 @@ HLOAD_CMD:
 .EF7B:
         POP  AF              ; Remove line start address
         JP   .EEF9           ; expect next line
-EF7F:
-        DI                   ; disable interrupts - REFLASH ROM C
-        CALL $E000           ; initialize ROM-C (and set 32 ​​system variables)
+        
+EF7F:                        ; Reinitialize ROM C
+        DI                   ; disable interrupts
+        CALL $E000           ; initialize ROM-C (and set 32 system variables)
         LD   HL, (RAMTOP)    ; HL=new RAMTOP
         LD   DE, $0020       ; DE=number of system variables above RAMTOP
         ADD  HL, DE          ; HL=old RAMTOP (with old system variables)
@@ -2398,7 +2400,7 @@ UP_CMD:
         RST  $8              ; read the parameter (how many bytes to raise the basic up)
         PUSH DE              ; save basic pointer
         PUSH HL              ; save parameter
-        BIT  7, H            ;  is the parameter greater than 32767 ?
+        BIT  7, H            ; is the parameter greater than 32767 ?
         JR   NZ, EFC5        ; if bigger HOW? (BUG. with ROM-D it will be stuck or RESET!!!)
         LD   DE, (BASICEND)  ; DE=end of basic +1
         PUSH DE
@@ -2420,7 +2422,7 @@ EFB4:
         ADD  HL, DE          ; HL=new beginning of BASIC
         LD   (BASICSTART), HL ; update system variable
         POP  DE              ; DE=saved basic pointer
-        RST  $30             ; continue basic (after changing the address ??? but it works!)
+        RST  $30             ; continue to basic (after changing the address ??? but it works!)
 EFC5:
         JP   ShowHowErr      ; print "HOW?" message
 
