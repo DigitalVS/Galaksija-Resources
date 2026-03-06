@@ -30,7 +30,7 @@ ROM binary files at this repository are ROM A and ROM B files for classical Gala
 
 ROM A and ROM B source files are ROM assembly source code files for classical Galaksija. This version of ROM A source file has many additional comments and many addresses changed to more readable symbolical form, while ROM B source is equal to official source available as a PDF file and has only original comments in Serbian language.
 
-ROM C is an assembly source file for Galaksija Plus. It is compatible with project of converting classic Galaksija to Plus version published in "Svet kompjutera" magazine in year 1986.
+ROM C is additional assembly source file for Galaksija Plus. It is compatible with project of converting classic Galaksija to Plus version published in "Svet kompjutera" magazine in year 1986.
 
 ## Bin2Gtp
 
@@ -38,7 +38,7 @@ Bin2Gtp is a Windows executable program which wraps binary file into the GTP (Ga
 
 ## Machine Code Monitor
 
-This is assembly source code for the machine code monitor program originally written by Voja Antonić in year 1984 and published in a computer magazine as a hex dump.
+This is assembly source code for the machine code monitor program originally written by Voja Antonić in year 1985 and published in a computer magazine as a hex dump.
 
 This version has rewritten disassembler part of the code. It now uses a bit more memory then before (about 2.5KByte vs 2KByte) for additional tables for instruction opcodes but actual disassembler code is much smaller and much more readable then in original program.
 
@@ -70,6 +70,8 @@ GTP file transferred from PC via USB-serial connection, should be saved to the E
 
 > You may've been noticed that program is loading to unusual memory address &7000 and not as expected to the top of the RAM. This is because saving and/or loading programs from EEPROM to address &8000 and up, is not working properly on Galaksija 2024.
 
+ROM file for the [Galaksija 2024 High Resolution](https://github.com/DigitalVS/Galaksija-2024-High-Resolution) expansion already contains SOUND command and if you are a happy owner of this expansion, you don't need to use it as an extra command.
+
 ### Old Galaksija with G2024 YM2149 Expansion
 
 As already being said, although primarily intended for Galaksija 2024, this  expansion will work fine with old Galaksija version, too. This is also convenient way to have both sound generator and [Galaxy Space Expansion](https://github.com/DigitalVS/Galaxy-Flash-Expansion) (GSE) connected at the same time, one to the CPU slot and the other to the expansion port on the back side of the motherboard, as it is shown on the next picture.
@@ -78,4 +80,4 @@ As already being said, although primarily intended for Galaksija 2024, this  exp
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Vitomir Spasojević (<https://github.com/DigitalVS/Galaxy-Resources>). All rights reserved.
+Copyright (c) 2026 Vitomir Spasojević (<https://github.com/DigitalVS/Galaxy-Resources>). All rights reserved.

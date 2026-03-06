@@ -4,7 +4,7 @@
 ; Version 36
 ;
 ; Authors: Nenad Dunjić and Milan Tadić
-; Comments: Hindički Ferenc, translated to english and adapted to sjasmplus by issalig
+; Comments: Ferenc Hindički, translated to english and adapted to sjasmplus by issalig
 ;
 ; Final touch and overall most deserving for this file contents: DigitalVS
 ;
@@ -18,8 +18,8 @@
 ; 15 Number of characters at screen row 16
 ; 16 Picture counter which determines cursor state, 0 - not blinking, 1 - blinking with period T=0,8s
 ; 17 Character code at cursor position or cursor code (191)
-; 18 Arrow execution indicator, 255 - an arrow control character is issued (TAB?), 0 - cursor is moving, 255,0 - option is turned-off
-; 19 Graphics indicator, 0 - memory not reserved, 255 - memory is reserved
+; 18 Arrow execution indicator, 255 - print an arrow control character, 0 - cursor is moving, 1 to 254 - option is turned-off
+; 19 Graphics indicator, 0 - memory not reserved (or any other value then 255), 255 - memory is reserved
 ; 20 Coordinate X for last drawn point
 ; 21 Coordinate Y for last drawn point
 ; 22 Character definition table start address lower byte
@@ -41,7 +41,7 @@ CmdRecognize  = $039A
 
         .ORG  $E000
 
-Start:
+Init:
         LD   DE, BASICLINK
         LD   HL, NewLinks
         LD   BC, $0006
@@ -1291,7 +1291,7 @@ CLEAR_CMD:
         LD   IX, $2A02
         LD   DE, $0004       ; length of variable in bytes
 .E8E8:
-        LD   (IX+$1), $40    ; characteristic is set...
+        LD   (IX+1),  $40    ; characteristic is set...
         RES  $7, (IX)        ; ...-128, which represents the number 0
         ADD  IX, DE
         DJNZ .E8E8           ; clears all variables
@@ -2037,7 +2037,7 @@ AUTO_CMD:
         CALL $07F2           ; find HL program line
         PUSH DE              ; Address of (at the end) found line on the stack (insertion beginning)
         JR   NZ, .ED70       ; If HL line not found, process entered line
-        PUSH DE              ; Address of adresa found line to the stack once more time
+        PUSH DE              ; Address of the found line to the stack one more time
         CALL $0811           ; DE=find start of the next program line
         POP  BC              ; BC=start of the found program line
         LD   HL, (BASICEND)  ; HL=BASIC end+1
