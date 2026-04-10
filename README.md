@@ -40,7 +40,7 @@ Bin2Gtp is a Windows executable program which wraps binary file into the GTP (Ga
 
 This is assembly source code for the machine code monitor program originally written by Voja Antonić in year 1985 and published in a computer magazine as a hex dump.
 
-This version has rewritten disassembler part of the code. It now uses a bit more memory then before (about 2.5KByte vs 2KByte) for additional tables for instruction opcodes but actual disassembler code is much smaller and much more readable then in original program.
+This version has rewritten disassembler part of the code. It now uses a bit more memory than before (about 2.5KByte vs 2KByte) for additional tables for instruction opcodes but actual disassembler code is much smaller and much more readable than in original program.
 
 ## G2024 YM2149 Sound Generator
 
@@ -70,13 +70,25 @@ GTP file transferred from PC via USB-serial connection, should be saved to the E
 
 > You may've been noticed that program is loading to unusual memory address &7000 and not as expected to the top of the RAM. This is because saving and/or loading programs from EEPROM to address &8000 and up, is not working properly on Galaksija 2024.
 
-ROM file for the [Galaksija 2024 High Resolution](https://github.com/DigitalVS/Galaksija-2024-High-Resolution) expansion already contains SOUND command and if you are a happy owner of this expansion, you don't need to use it as an extra command.
+ROM file for the [Galaksija 2024 High Resolution](https://github.com/DigitalVS/Galaksija-2024-High-Resolution) expansion already contains SOUND command and if you are a happy owner of this expansion, you don't need to use it as an externally loaded command.
 
 ### Old Galaksija with G2024 YM2149 Expansion
 
 As already being said, although primarily intended for Galaksija 2024, this  expansion will work fine with old Galaksija version, too. This is also convenient way to have both sound generator and [Galaxy Space Expansion](https://github.com/DigitalVS/Galaxy-Flash-Expansion) (GSE) connected at the same time, one to the CPU slot and the other to the expansion port on the back side of the motherboard, as it is shown on the next picture.
 
 <img src="./images/YM2149_and_GSE.jpg" width="640" alt="Galaksija with GSE and sound generator connected">
+
+## Lowercase Letters and Font Editor
+
+Due to the fact that all eight data bus lines are connected to the character generator EPROM chip, Galaksija 2024 is able to display more different characters than old Galaksija. Directory _CharGen_ contains character generator binary file for Galaksija 2024 with lowercase letters and few other additional characters, like: \\[|]~. All these characters can be programmatically displayed on the screen but are not possible to type on the keyboard, because it would require change in keyboard handling routine that is not implemented at the moment. However, many new written programs can benefit even from this level of support for new characters.
+
+Next picture shows new characters at code numbers 96 to 126. Note that letter characters have the same codes as in the ASCII table.
+
+<img src="./images/lowercase_characters.jpg" width="540" alt="Lower case letters and their codes">
+
+The same _CharGen_ directory contains a simple font editor program. This is a Python program and, as a requirement, needs FreeSimpleGUI Python package to be installed. That package can be installed with command `pip install FreeSimpleGUI`. Font editor can directly read from and write to Galaksija 2024 character generator binary files.
+
+![G2024 Font Editor](/images/font_editor.png)
 
 The MIT License (MIT)
 
