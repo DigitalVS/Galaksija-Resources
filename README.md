@@ -80,9 +80,11 @@ As already being said, although primarily intended for Galaksija 2024, this  exp
 
 ## Lowercase Letters and Font Editor
 
-Due to the fact that all eight data bus lines are connected to the character generator EPROM chip, Galaksija 2024 is able to display more different characters than old Galaksija. Directory _CharGen_ contains character generator binary file for Galaksija 2024 with lowercase letters and few other additional characters, like: \\[|]~. All these characters can be programmatically displayed on the screen but are not possible to type on the keyboard, because it would require change in keyboard handling routine that is not implemented at the moment. However, many new written programs can benefit even from this level of support for new characters.
+Due to the fact that all eight data bus lines are connected to the character generator EPROM chip, Galaksija 2024 is able to display more different characters than old Galaksija. Directory _CharGen_ contains character generator binary file for Galaksija 2024 with lowercase letters and few other additional symbols, like: \\ [ | ] ~. All these characters can be programmatically displayed on the screen but are not possible to type on the keyboard, because it would require change in keyboard handling routine that is not implemented at the moment. However, many new written programs can benefit even from this level of support for new characters.
 
-Next picture shows new characters at code numbers 96 to 126. Note that letter characters have the same codes as in the ASCII table.
+New letters and other symbols are also distributed as part of character generator file for [high resolution expansion](https://github.com/DigitalVS/Galaksija-2024-High-Resolution) project.
+
+Next picture shows new characters at code numbers 96 to 126. Note that new letter characters have the same codes as in the ASCII table.
 
 <img src="./images/lowercase_characters.jpg" width="540" alt="Lower case letters and their codes">
 
