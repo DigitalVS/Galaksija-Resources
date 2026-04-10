@@ -4,7 +4,7 @@
 ; Version 36
 ;
 ; Authors: Nenad Dunjić and Milan Tadić
-; Comments: Ferenc Hindički, translated to english and adapted to sjasmplus by issalig
+; Comments: Ferenc Hindicki, translated to english and adapted to sjasmplus by issalig
 ;
 ; Final touch and overall most deserving for this file contents: DigitalVS
 ;
@@ -182,7 +182,7 @@ PLOT_CMD:
         POP  AF
         PUSH AF              ; refresh Z flag
         PUSH BC              ; pass coordinates to PLOT/UNPLOT subroutine
-        CALL E148            ; turns the dot on/off
+        CALL PLOT_UNPLOT     ; turns the dot on/off
 E0D2:
         POP  AF
         POP  DE
@@ -197,10 +197,10 @@ DRAW_CMD:
         POP  BC              ; remove return address
         PUSH AF              ; keep Z flag
         CALL E46A            ; read coordinates Y2,X2 in BC
-        CALL .E0E7           ; draw / erase line
+        CALL .DRAW_UNDRAW    ; draw / erase line
         LD   IX, ARITHMACC   ; reset arithmetic stack pointer
         JR   E0D2            ; return to basic
-.E0E7:
+.DRAW_UNDRAW:
         LD   HL, (RAMTOP)    ; DRAW subroutine, HL=RAMTOP
         LD   DE, $0014
         ADD  HL, DE          ; HL=RAMTOP+20
@@ -283,11 +283,11 @@ DRAW_CMD:
 .E140:
         EX   (SP), HL
         EXX
-        CALL E148
+        CALL PLOT_UNPLOT
         EX   AF, AF'
         JR   .E124
 
-E148:
+PLOT_UNPLOT:
         POP  HL              ; HL=return address, stack=YX coordinates
         EX   (SP), HL        ; HL=YX, stack=return address
         PUSH HL              ; stack=YX, return address
@@ -2383,7 +2383,7 @@ HLOAD_CMD:
 .EF7B:
         POP  AF              ; Remove line start address
         JP   .EEF9           ; expect next line
-        
+
 EF7F:                        ; Reinitialize ROM C
         DI                   ; disable interrupts
         CALL $E000           ; initialize ROM-C (and set 32 system variables)
