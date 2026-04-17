@@ -88,7 +88,7 @@ Next picture shows new characters at code numbers 96 to 126. Note that new lette
 
 <img src="./images/lowercase_characters.jpg" width="540" alt="Lower case letters and their codes">
 
-The same _CharGen_ directory contains a simple font editor program. This is a Python program and, as a requirement, needs FreeSimpleGUI Python package to be installed. That package can be installed with command `pip install FreeSimpleGUI`. Font editor can directly read from and write to Galaksija 2024 character generator binary files.
+The same _CharGen_ directory contains a simple font editor program. This is a Python program and, as a requirement, needs FreeSimpleGUI Python package to be installed. That package can be installed with command `pip install FreeSimpleGUI`. Font editor can directly read from and write to Galaksija 2024 character generator binary files and it allows editing of 12 visible lines of a character (_latch_ 4-bit row indexes 2 to 13).
 
 ![G2024 Font Editor](/images/font_editor.png)
 

@@ -2,11 +2,12 @@ import FreeSimpleGUI as sg
 import sys
 
 # Configuration
-ROWS = 13
+MIN_ROW = 2
+MAX_ROW = 14 # Max row is actually one less than this value!
 COLS = 8
 INIT_CHAR_CODE = 32 # ASCII code for space character
-MIN_CHAR_CODE = 32
-MAX_CHAR_CODE = 256
+MIN_CHAR_CODE = 32 # First 32 codes are non-printable characters
+MAX_CHAR_CODE = 256 # Max code value is actually one less than this value!
 EMPTY_FILE_STR = "File not selected"
 
 def main():
@@ -16,8 +17,7 @@ def main():
     total_args = len(sys.argv)
     if total_args > 1:
         file_path = sys.argv[1]
-        # Try to open the file
-        open(file_path)
+        open(file_path) # Try to open the CharGen file passed as a parameter
 
     sg.theme('Dark Amber')
 
@@ -34,9 +34,11 @@ def main():
               [sg.Text(text='Key code:', pad=(1, 5)), sg.Spin(values=range_values, initial_value=INIT_CHAR_CODE, size=(5, 1), key='-SPIN-', enable_events=True),
               sg.Text(text='hex: ' + hex(INIT_CHAR_CODE), key='-HEX-')]]
 
-    for r in range(ROWS):
+    row_no = 1
+    for r in range(MIN_ROW, MAX_ROW):
         row_layout = []
-        row_layout.append(sg.Text(r + 1, key=('-TEXTNO-', r), size=2))
+        row_layout.append(sg.Text(row_no, key=('-TEXTNO-', r), size=2))
+        row_no += 1
         for c in range(COLS):
             # Create a button for each cell
             row_layout.append(sg.Button(' ', size=(2, 1), key=(r, c), button_color=('white', 'dimgray'), pad=(1, 1)))
@@ -70,7 +72,6 @@ def main():
             current_char_id = get_spinner_value(values['-SPIN-'])
 
             if current_char_id and MIN_CHAR_CODE <= int(current_char_id) <= MAX_CHAR_CODE:
-                #print(f"{values['-SPIN-']}, {current_char_id}")
                 update_gui(window, file_data, current_char_id)
                 window['-HEX-'].update('hex: ' + hex(current_char_id))
             else:
@@ -82,7 +83,6 @@ def main():
             if file_path:
                 set_statusbar_msg(window['-STATUS-'], file_path)
                 file_data = file_open(file_path)
-                #window['-SPIN-'].update(INIT_CHAR_CODE)
                 update_gui(window, file_data, values['-SPIN-'])
         elif event in ('Save       Ctrl+S', "SAVE_SHORTCUT"):
             if file_path is None:
@@ -99,26 +99,26 @@ def main():
         elif event == 'Clear':
             current_char_id = get_spinner_value(values['-SPIN-'])
             if current_char_id:
-                for row in range(ROWS):
+                for row in range(MIN_ROW, MAX_ROW):
                     file_data = update_file_data(file_data, current_char_id, row, 0xFF)
                 update_gui(window, file_data, current_char_id)
         elif event in ('Copy     Ctrl+C', "COPY_SHORTCUT"):
             text = ''
-            for r in range(ROWS):
+            for r in range(MIN_ROW, MAX_ROW):
                 text += hex(get_row_value(window, r)) + ', '
             sg.clipboard_set(text[:-2])
             #sg.popup_quick_message('Copied to clipboard!', background_color='green')
         elif event in ('Paste    Ctrl+V', "PASTE_SHORTCUT"):
             text = sg.clipboard_get()
-            #focused_element = window.find_element_with_focus()
+
             if isinstance(text, str):
                 row_values = text.replace(' ', '').split(',')
 
-                if len(row_values) == ROWS:
+                if len(row_values) == (MAX_ROW - MIN_ROW):
                     char_id = get_spinner_value(values['-SPIN-'])
                     if char_id:
-                        for r in range(ROWS):
-                            file_data = update_file_data(file_data, char_id, r, int(row_values[r], 16))
+                        for r in range(MIN_ROW, MAX_ROW):
+                            file_data = update_file_data(file_data, char_id, r, int(row_values[r - MIN_ROW], 16))
                         update_gui(window, file_data, char_id)
 
         elif event == 'New':
@@ -132,7 +132,7 @@ def main():
         elif event == 'View font...':
             font_view_window(file_data)
         elif event == 'About...':
-            sg.popup('Galaksija 2024 Font Editor', 'Copyright 2026 Vitomir Spasojević', 'Version 1.1', button_justification='c')
+            sg.popup('Galaksija 2024 Font Editor', 'Copyright 2026 Vitomir Spasojević', 'Version 1.2', button_justification='c')
 
     window.close()
 
@@ -180,12 +180,11 @@ def get_save_path(sg):
 
 def update_file_data(file_data, char_id, row, row_value):
     char_addr = get_char_address(char_id, row)
-    #print(hex(char_addr))
     return file_data[:char_addr] + reverse_byte(row_value).to_bytes(1, 'little') + file_data[char_addr + 1:]
 
 
 def update_gui(window, file_data, char_id):
-    for row in range(ROWS):
+    for row in range(MIN_ROW, MAX_ROW):
         char_addr = get_char_address(char_id, row)
         char_row_byte = file_data[char_addr]
 
@@ -225,7 +224,7 @@ def get_row_value(window, row):
 # A4 - D4 ASCII code
 # A5 - D5 ASCII code
 # A6 - D7 (0 - ASCII code, 1 - TextGraph)
-# A7 - 0 latch bit 1 (latch bits select character row)
+# A7 - 0 latch bit 1 (four latch bits select character row)
 # A8 - 0 latch bit 2
 # A9 - 0 latch bit 3
 # A10 - 0 latch bit 4
@@ -283,14 +282,14 @@ def font_view_window(file_data):
         quotient, remainder = divmod(char_id - MIN_CHAR_CODE, 32)
         spacing = 0 if remainder == 0 else spacing + 5
 
-        for row in range(ROWS):
+        for row in range(MIN_ROW, MAX_ROW):
             char_addr = get_char_address(char_id, row)
             char_row_byte = file_data[char_addr]
 
             for col in range(COLS):
                 col_bit = (char_row_byte >> col) & 1
                 color = 'black' if col_bit == 1 else 'white'
-                graph.draw_point((remainder * COLS + col + spacing, HEIGHT - (ROWS + row + (quotient * 16))), size=PIXEL_SIZE, color=color)
+                graph.draw_point((remainder * COLS + col + spacing, HEIGHT - (MAX_ROW + row + quotient * 16)), size=PIXEL_SIZE, color=color)
 
     # Event Loop
     while True:
