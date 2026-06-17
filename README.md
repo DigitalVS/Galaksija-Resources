@@ -78,6 +78,23 @@ As already being said, although primarily intended for Galaksija 2024, this  exp
 
 <img src="./images/YM2149_and_GSE.jpg" width="640" alt="Galaksija with GSE and sound generator connected">
 
+## G2024 Companion - Two in One Expansion
+
+This is a 2-in-1 Galaksija 2024 expansion with both sound generator and USB flash expansion on a single PCB. While [USB flash expansion](https://github.com/DigitalVS/Galaxy-Flash-Expansion) is mostly unchanged from its solo version for Galaksija 2024, sound generator is this time made with different chip, a Yamaha YMZ284. YMZ284 is a software compatible with its older siblings YM2149 and AY-3-8910 but is in a smaller package and, hence, takes less space on a PCB.
+
+Sound generator also features additional ~3.58MHz oscillator and small audio grade operational amplifier on its output. Sound chip frequency is chosen by moving jumper between 3MHz and 3.58MHz positions. The later frequency allows more faithful reproduction for sound files created for MSX and ZX Spectrum platforms. Output op amp reduces the sound chip load and improves impedance matching when connected to various amplifiers.
+
+Next two pictures are showing G2024 Companion board, its front and back side. On the back side is only address decoder IC, which enables YMZ284 and CH376S chips when they are addressed by their corresponding I/O addresses.
+
+<div class="grid" markdown>
+
+![G2024 YM2149 3D view](/images/G2024_Companion.png)
+
+![G2024 YM2149 bottom side view](/images/G2024_Companion_back.png)
+
+</div>
+
+
 ## Lowercase Letters and Font Editor
 
 Due to the fact that all eight data bus lines are connected to the character generator EPROM chip, Galaksija 2024 is able to display more different characters than old Galaksija. Directory _CharGen_ contains character generator binary file for Galaksija 2024 with lowercase letters and few other additional symbols, like: \\ [ | ] ~. All these characters can be programmatically displayed on the screen but are not possible to type on the keyboard, because it would require change in keyboard handling routine that is not implemented at the moment. However, many new written programs can benefit even from this level of support for new characters.
