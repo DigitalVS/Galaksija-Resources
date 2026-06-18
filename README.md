@@ -80,11 +80,11 @@ As already being said, although primarily intended for Galaksija 2024, this  exp
 
 ## G2024 Companion - Two in One Expansion
 
-This is a 2-in-1 Galaksija 2024 expansion with both sound generator and USB flash expansion on a single PCB. While [USB flash expansion](https://github.com/DigitalVS/Galaxy-Flash-Expansion) is mostly unchanged from its solo version for Galaksija 2024, sound generator is this time made with different chip, a Yamaha YMZ284. YMZ284 is a software compatible with its older siblings YM2149 and AY-3-8910 but is in a smaller package and, hence, takes less space on a PCB.
+This is a 2-in-1 Galaksija 2024 expansion board with both sound generator and USB flash expansion on a single PCB. While [USB flash expansion](https://github.com/DigitalVS/Galaxy-Flash-Expansion) is mostly unchanged from its solo version for Galaksija 2024, sound generator is this time made with another chip, a Yamaha YMZ284. YMZ284 is software compatible with its older siblings, YM2149 and AY-3-8910, but is in a smaller package and, hence, takes less space on a PCB.
 
-Sound generator also features additional ~3.58MHz oscillator and small audio grade operational amplifier on its output. Sound chip frequency is chosen by moving jumper between 3MHz and 3.58MHz positions. The later frequency allows more faithful reproduction for sound files created for MSX and ZX Spectrum platforms. Output op amp reduces the sound chip load and improves impedance matching when connected to various amplifiers.
+Sound generator also features additional ~3.58MHz oscillator and a small audio grade operational amplifier on its output. Sound chip frequency is chosen by moving jumper between 3MHz and 3.58MHz positions. The later frequency allows more faithful reproduction for sound files created for MSX and ZX Spectrum platforms. Output op amp reduces the sound chip load and improves impedance matching when connected to various amplifiers.
 
-Next two pictures are showing G2024 Companion board, its front and back side. On the back side is only address decoder IC, which enables YMZ284 and CH376S chips when they are addressed by their corresponding I/O addresses.
+Next two pictures are showing G2024 Companion board, front and the back side. Only one chip is at the back side and this is the address decoder IC, which enables YMZ284 and CH376S chips when they are addressed by their respective I/O addresses.
 
 <div class="grid" markdown>
 
@@ -93,7 +93,6 @@ Next two pictures are showing G2024 Companion board, its front and back side. On
 ![G2024 YM2149 bottom side view](/images/G2024_Companion_back.png)
 
 </div>
-
 
 ## Lowercase Letters and Font Editor
 
